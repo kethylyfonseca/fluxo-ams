@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Fluxo de Atendimento AMS</title>
+
+<style>
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial;
+    display: flex;
+    background: linear-gradient(135deg, #0d47a1, #1976d2);
+}
+
+/* MENU */
+.sidebar {
+    width: 230px;
+    height: 100vh;
+    position: fixed;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    color: white;
+}
+
+.sidebar h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    display: block;
+    color: #e3f2fd;
+    text-decoration: none;
+    margin: 10px 0;
+    transition: 0.2s;
+}
+
+.sidebar a:hover {
+    color: white;
+    transform: translateX(5px);
+}
+
+/* CONTEÚDO */
+.content {
+    margin-left: 250px;
+    width: 100%;
+}
+
+/* SLIDES */
+.slide {
+    padding: 70px;
+    margin: 20px;
+    background: rgba(255,255,255,0.96);
+    border-radius: 16px;
+    color: #2c3e50;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    animation: fadeIn 0.6s ease;
+    position: relative;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(20px);}
+    to {opacity:1;}
+}
+
+/* LOGO */
+.logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 120px;
+}
+
+/* TITULOS */
+h1 {
+    font-size: 36px;
+    color: #0d47a1;
+}
+
+h2 {
+    color: #1565c0;
+    margin-bottom: 15px;
+}
+
+/* GRID */
+.grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* CARD */
+.card {
+    flex: 1;
+    min-width: 250px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 5px solid #1976d2;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+/* 🔴 CRÍTICO */
+.critical {
+    border-left: 6px solid #8b0000;
+    background: linear-gradient(135deg, #fff0f0, #ffe5e5);
+    color: #4a0000;
+}
+
+/* TABELA */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th {
+    background: #1976d2;
+    color: white;
+    padding: 12px;
+}
+
+.table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* BADGE */
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    background: #e3f2fd;
+    color: #1565c0;
+    margin-bottom: 10px;
+}
+.flow-vertical {
+    position: relative;
+    margin-top: 30px;
+    padding-left: 30px;
+}
+
+/* linha vertical */
+.flow-vertical::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: #1976d2;
+    border-radius: 2px;
+}
+
+.flow-item {
+    position: relative;
+    margin-bottom: 25px;
+    padding-left: 20px;
+}
+
+.flow-item::before {
+    content: "";
+    position: absolute;
+    left: -2px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    background: #1976d2;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px #e3f2fd;
+}
+
+.flow-box {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transition: 0.2s;
+}
+
+.flow-box:hover {
+    transform: translateX(5px);
+}
+
+.flow-title {
+    font-weight: bold;
+    color: #0d47a1;
+}
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.rule-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    border-left: 6px solid #1976d2;
+    transition: 0.3s;
+}
+
+.rule-card:hover {
+    transform: translateY(-4px);
+}
+
+.rule-card.critical {
+    border-left-color: #8b0000;
+    background: linear-gradient(135deg, #fff0f0, #ffe5e5);
+    color: #4a0000;
+}
+
+.rule-card.info {
+    border-left-color: #1565c0;
+    background: #f4f8ff;
+}
+
+.rule-card p {
+    margin-top: 8px;
+    font-size: 14px;
+    opacity: 0.85;
+}
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* card padrão */
+.team-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    border-left: 6px solid #1976d2;
+    transition: 0.3s;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+}
+
+/* card grande (TI ocupa linha inteira) */
+.team-card.full {
+    grid-column: span 2;
+}
+
+/* título */
+.team-card h3 {
+    margin: 10px 0 15px;
+    color: #0d47a1;
+}
+
+/* lista mais limpa */
+.team-card ul {
+    padding-left: 18px;
+    margin: 0;
+}
+
+.team-card li {
+    margin-bottom: 6px;
+}
+
+/* badge */
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    background: #e3f2fd;
+    color: #1565c0;
+    font-weight: 500;
+}
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+.linha {
+  display: flex;
+  gap: 20px;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.card {
+  width: 100% !important;
+  max-width: none !important;
+}
+</style>
+</head>
+
+<body>
+
+<!-- MENU -->
+<div class="sidebar">
+    <h2>OFM SYSTEMS</h2>
+    <a href="#capa">Início</a>
+    <a href="#eficiencia">Eficiência</a>
+    <a href="#fluxo">Fluxo</a>
+    <a href="#prioridade">Prioridade</a>
+    <a href="#regras">Regras</a>
+    <a href="#areas">Áreas</a>
+    <a href="#execucao">Execução</a>
+    <a href="#final">Finalização</a>
+</div>
+
+<div class="content">
+
+<!-- CAPA -->
+<div id="capa" class="slide">
+    <img src="logo-ofm.png" class="logo">
+    <h1 style="margin-top:60px;">Fluxo de Atendimento AMS</h1>
+    <p><b>Estrutura e Processos</b></p>
+    <p>📈 Evolução contínua baseada em análise de chamados e prevenção de recorrência.</p>
+</div>
+
+<!-- EFICIÊNCIA -->
+<div id="eficiencia" class="slide">
+    <h2>🎯 Eficiência e Controle</h2>
+    <p>Padronização, redução de erros e controle total.</p>
+
+    <div class="grid">
+        <div class="card"><b>Especialização</b><br>Redução de erros técnicos</div>
+        <div class="card"><b>Centralização</b><br>Controle e SLA</div>
+        <div class="card"><b>Escalabilidade</b><br>Crescimento estruturado</div>
+        <div class="card"><b>Melhoria Contínua</b><br>Base de conhecimento</div>
+    </div>
+</div>
+
+<!-- FLUXO -->
+<div id="fluxo" class="slide">
+    <h2>🔄 Visão do Fluxo</h2>
+
+    <div class="flow-vertical">
+
+        <div class="flow-item">
+            <div class="flow-box">
+                <span class="flow-title">Entrada</span><br>
+                <small>Cliente aciona</small>
+            </div>
+        </div>
+
+        <div class="flow-item">
+            <div class="flow-box">
+                <span class="flow-title">Triagem</span><br>
+                <small>Classificação</small>
+            </div>
+        </div>
+
+        <div class="flow-item">
+            <div class="flow-box">
+                <span class="flow-title">Execução</span><br>
+                <small>Atuação técnica</small>
+            </div>
+        </div>
+
+        <div class="flow-item">
+            <div class="flow-box">
+                <span class="flow-title">Validação</span><br>
+                <small>Controle de qualidade</small>
+            </div>
+        </div>
+
+        <div class="flow-item">
+            <div class="flow-box">
+                <span class="flow-title">Encerramento</span><br>
+                <small>Causa raiz + evidência</small>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- PRIORIDADE -->
+<div id="prioridade" class="slide">
+    <h2>Classificação de Prioridade</h2>
+
+    <table class="table">
+        <tr>
+            <th>Nível</th>
+            <th>Impacto</th>
+            <th>Ação</th>
+        </tr>
+        <tr class="critical">
+            <td><b>P1 - Crítica</b></td>
+            <td>Parada total</td>
+            <td>Atendimento imediato</td>
+        </tr>
+        <tr>
+            <td>P2</td>
+            <td>Impacto elevado</td>
+            <td>Prioridade</td>
+        </tr>
+        <tr>
+            <td>P3</td>
+            <td>Impacto moderado</td>
+            <td>Fila normal</td>
+        </tr>
+        <tr>
+            <td>P4</td>
+            <td>Baixo impacto</td>
+            <td>Fila normal</td>
+        </tr>
+    </table>
+</div>
+
+<!-- REGRAS -->
+<div class="slide">
+    <h2>⚠️ Regras importantes</h2>
+
+    <div class="rules-grid">
+
+        <div class="rule-card critical">
+            <b>P1 prioridade absoluta</b>
+            <p>Tratamento imediato e sem fila.</p>
+        </div>
+
+        <div class="rule-card info">
+            <b>SLA de comunicação (24h)</b>
+            <p>Atualização obrigatória dentro do prazo.</p>
+        </div>
+
+        <div class="rule-card critical">
+            <b>Evidência + causa raiz obrigatória</b>
+            <p>Todo chamado deve conter um registro completo, incluindo a justificativa técnica e a descrição da correção definitiva aplicada.</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- ÁREAS -->
+<div class="slide">
+    <h2>👥 Divisão por Área</h2>
+
+    <div class="team-grid">
+
+        <div class="team-card">
+            <span class="badge">Cordenadora</span>
+            <h3>Kethyly</h3>
+            <ul>
+                <li>Status report com clientes</li>
+                <li>Controle de horas de suporte e atendimentos corretivos</li>
+                <li>Priorização de demandas</li>
+                <li>Distribuição de demandas e direcionamentos</li>
+                <li>Atuação em demandas mais complexas</li>
+            </ul>
+        </div>
+        <div class="team-card">
+            <span class="badge">Atendimento N1 e N2</span>
+            <h3>Monique + Dupla</h3>
+            <ul>
+                <li>Faturamento</li>
+                <li>Documentação</li>
+                <li>Manuais</li>
+                <li>Treinamentos</li>
+                <li>Agendas técnicas</li>
+            </ul>
+        </div>
+		<div class="team-card">
+    <span class="badge">Atendimento N1 e N2</span>
+    <h3>Thiago + Dupla</h3>
+    <ul>
+        <li>Apuração</li>
+        <li>Escrituração</li>
+        <li>Emissões</li>
+        <li>Agendas técnicas</li>
+    </ul>
+</div>
+
+<div class="team-card">
+    <span class="badge">Atendimento N1</span>
+    <h3>Pessoa 3 + Dupla</h3>
+    <ul>
+        <li>Atualização de certificados</li>
+        <li>Criação de usuários nos sistemas FS, GFT e GRF</li>
+        <li>Suporte geral (Dúvidas, triagem, acompanhamento AMS)</li>
+    </ul>
+</div>
+    </div>
+</div>
+
+<!-- EXECUÇÃO -->
+<div id="execucao" class="slide">
+    <h2>⚙️ Execução Técnica</h2>
+
+    <div class="grid">
+        <div class="card">
+            <b>Análise</b>
+            <ul>
+                <li>Validar dados</li>
+                <li>Reproduzir erro</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <b>Tratativa</b>
+            <ul>
+                <li>Identificar causa</li>
+                <li>Correção na raiz</li>
+                <li>Documentação</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- FINAL -->
+<div id="final" class="slide">
+    <h2>✅ Validação e Encerramento</h2>
+
+    <div class="grid">
+        <div class="card">Validação interna</div>
+        <div class="card">Retorno com evidências</div>
+    </div>
+</div>
+
+</div>
+
+</body>
+</html>
